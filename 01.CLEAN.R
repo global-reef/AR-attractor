@@ -1,130 +1,129 @@
-#Load Packages
-library(dplyr)
-library(stringr)
-library(tidyr)
-library(lubridate)
-library(forcats)
 
+library(dplyr)
+library(tidyr)
+library(forcats)
+library(lubridate)
 
 clean_data <- function(file_path) {
-  # Load the raw data with strings as factors
-  # browser() # for troubleshooting 
-  df <- read.csv(file_path, stringsAsFactors = TRUE, strip.white = TRUE)
-  # remove blank rows and columns 
-  df[df == ""] <- NA
-  df <- df[, colSums(!is.na(df)) > 0]
-  df <- df[rowSums(!is.na(df)) > 0, ]
+  # ---- Load raw data ----
+  raw_fish <- read.csv(file_path, stringsAsFactors = TRUE, strip.white = TRUE)
   
-  # Rename columns
-  df <- df %>%
-    rename(sml_Grouper = Grouper.30,
-           lrg_Grouper = Grouper.30.1,
-           lrg_Snapper = Snapper.30)
+  # ---- Remove empty rows and columns ----
+  raw_fish[raw_fish == ""] <- NA
+  raw_fish <- raw_fish[, colSums(!is.na(raw_fish)) > 0]
+  raw_fish <- raw_fish[rowSums(!is.na(raw_fish)) > 0, ]
   
-  # Define the species columns of interest and keep only those that exist in the data
-  species_cols <- c("Parrotfish", "Rabbitfish", "Butterflyfish", "Angelfish", "Cleaner_Wrasse",
-                    "Batfish", "Thicklip", "Red_Breast", "Slingjaw", "Sweetlips", "Squirrel.Soldier",
-                    "Triggerfish", "Porcupine.Puffer", "Ray", "Brown_Stripe_Snapper", 
-                    "Russels_Snapper", "lrg_Snapper", "Eel", "Trevally", "Emperorfish",
-                    "sml_Grouper", "lrg_Grouper", "Barracuda")
-  species_cols <- species_cols[species_cols %in% colnames(df)]
-  
-  # Fix Formats
-  df[species_cols] <- lapply(df[species_cols], as.numeric)
-  df$Date <- as.Date(as.character(df$Date), format = "%m/%d/%Y")
-  df$Time <- format(as.POSIXct(df$Time, format = "%H:%M"), "%H:%M")
-  df$Weather <- as.factor(df$Weather)
-  
-  # Pivot longer: create a long-format data frame with one row per survey-species
-  fish_long <- df %>%
-    pivot_longer(
-      cols = all_of(species_cols),
-      names_to = "Species",
-      values_to = "Count"
+  # ---- Fix column names ----
+  raw_fish <- raw_fish %>%
+    rename(
+      sml_Grouper = Grouper.30,
+      lrg_Grouper = Grouper.30.1,
+      lrg_Snapper = Snapper.30
     )
   
-  # Define functional groups
-  functional_groups <- data.frame(
-    Species = c("Parrotfish", "Rabbitfish", "Butterflyfish", "Angelfish", "Cleaner_Wrasse",
-                "Batfish", "Thicklip", "Red_Breast", "Slingjaw", "Sweetlips", "Squirrel.Soldier",
-                "Triggerfish", "Porcupine.Puffer", "Ray", "Brown_Stripe_Snapper", 
-                "Russels_Snapper", "lrg_Snapper", "Eel", "Trevally", "Emperorfish",
-                "sml_Grouper", "lrg_Grouper", "Barracuda"),
-    Functional_Group = c("Grazer", "Grazer", "Grazer", "Invertivore", "Invertivore",
-                         "Invertivore", "Invertivore", "Invertivore", "Invertivore", "Invertivore",
-                         "Invertivore", "Invertivore", "Invertivore", "Mesopredator", "Mesopredator",
-                         "Mesopredator", "HTLP", "Mesopredator", "HTLP", "Mesopredator",
-                         "Mesopredator", "HTLP", "HTLP")
+  # ---- Identify species columns ----
+  species_cols <- c("Parrotfish","Rabbitfish","Butterflyfish","Angelfish","Cleaner_Wrasse",
+                    "Batfish","Thicklip","Red_Breast","Slingjaw","Sweetlips","Squirrel.Soldier",
+                    "Triggerfish","Porcupine.Puffer","Ray","Brown_Stripe_Snapper","Russels_Snapper",
+                    "lrg_Snapper","Eel","Trevally","Emperorfish","sml_Grouper","lrg_Grouper","Barracuda")
+  species_cols <- species_cols[species_cols %in% colnames(raw_fish)]
+  
+  # ---- Fix data types ----
+  raw_fish[species_cols] <- lapply(raw_fish[species_cols], as.numeric)
+  raw_fish$Date <- as.Date(as.character(raw_fish$Date), format = "%m/%d/%Y")
+  
+  # ---- Pivot to long format ----
+  fish_long <- raw_fish %>%
+    pivot_longer(cols = all_of(species_cols),
+                 names_to = "Species",
+                 values_to = "Count")
+  
+  # ---- Assign functional groups ----
+  functional_groups <- tibble::tribble(
+    ~Species, ~Functional_Group,
+    "Parrotfish","Grazer","Rabbitfish","Grazer","Butterflyfish","Grazer",
+    "Angelfish","Invertivore","Cleaner_Wrasse","Invertivore","Batfish","Invertivore",
+    "Thicklip","Invertivore","Red_Breast","Invertivore","Slingjaw","Invertivore",
+    "Sweetlips","Invertivore","Squirrel.Soldier","Invertivore","Triggerfish","Invertivore",
+    "Porcupine.Puffer","Invertivore","Ray","Mesopredator","Brown_Stripe_Snapper","Mesopredator",
+    "Russels_Snapper","Mesopredator","lrg_Snapper","HTLP","Eel","Mesopredator",
+    "Trevally","HTLP","Emperorfish","Mesopredator","sml_Grouper","Mesopredator",
+    "lrg_Grouper","HTLP","Barracuda","HTLP"
   )
   
-  # Join the functional groups and set order
   fish_long <- fish_long %>%
     left_join(functional_groups, by = "Species") %>%
-    mutate(Functional_Group = factor(Functional_Group,
-                                     levels = c("Grazer", "Invertivore", "Mesopredator", "HTLP"),
-                                     ordered = TRUE))
-  # round to the nearest ineger 
-  fish_long <- fish_long %>% 
-    mutate(Count = ceiling(Count))
-  # Create a unique survey ID if not already present
-  if(!"survey_id" %in% colnames(fish_long)) {
-    fish_long <- fish_long %>%
-      mutate(survey_id = paste(Site, Date, sep = "_"))
-  }
+    mutate(Count = ceiling(replace_na(Count, 0)),
+           Functional_Group = factor(Functional_Group,
+                                     levels = c("Grazer","Invertivore","Mesopredator","HTLP")))
+  
+  # ---- Remove unwanted columns ----
+  fish_long <- fish_long %>%
+    select(-Time, -Duration, -Depth, -Visibility, -Weather, -Current, -Boats, -total_N) %>%
+    filter(Researcher != "Keisha")
+  
+  # ---- Fix site naming ----
+  fish_long$Site <- fct_recode(fish_long$Site, "No Name Pinnacle" = "No Name")
+  
+  # ---- Assign site pairs ----
+  fish_long <- fish_long %>%
+    mutate(pair = case_when(
+      Site %in% c("Aow Mao","Aow Mao Wreck") ~ "Aow Mao",
+      Site %in% c("No Name Pinnacle","No Name Wreck") ~ "No Name",
+      Site %in% c("Hin Pee Wee","Sattakut") ~ "Sattakut"
+    )) %>%
+    filter(!is.na(pair)) %>%
+    mutate(Type = recode(Type, "Artifical" = "Artificial"))
+  
+  # ---- Check structure ----
+  message("✅ Site–pair structure:")
+  print(fish_long %>% count(pair, Site))
+  
+  # ---- Deployment period flag ----
+  deployment_date <- as.Date("2023-09-07")
+  fish_long <- fish_long %>%
+    mutate(deployment_period = case_when(
+      pair == "Sattakut" ~ "Post",
+      Date < deployment_date ~ "Pre",
+      TRUE ~ "Post"
+    ))
+  
+  # ---- Handle missing counts ----
+  fish_long <- fish_long %>% mutate(Count = replace_na(Count, 0))
+  
+  # ---- Create unique survey ID ----
+  fish_long <- fish_long %>%
+    mutate(survey_id = paste(Site, Date, Researcher, sep = "_"))
+  
+  # ---- Compute months since deployment ----
+  fish_long <- fish_long %>%
+    mutate(months_since_deployment =
+             if_else(Date < deployment_date, 0,
+                     interval(deployment_date, Date) / months(1)))
+  
+  # ---- Apply standardized naming (for 00.SET.R) ----
+  fish_long <- fish_long %>%
+    mutate(
+      period   = factor(deployment_period, levels = c("Pre","Post")),
+      type     = factor(Type, levels = c("Artificial","Natural")),
+      t_since  = pmax(0, months_since_deployment),
+      pair     = factor(pair),
+      site     = factor(Site),
+      fgroup   = factor(Functional_Group,
+                        levels = c("Grazer","Invertivore","Mesopredator","HTLP")),
+      date_num = as.numeric(Date - min(Date))
+    )
+  
+  # ---- Final selection and ordering ----
+  fish_long <- fish_long %>%
+    select(site, pair, type, period, t_since, date_num,
+           Researcher, survey_id, Species, fgroup, Count, Date)
+  
+  # ---- Save cleaned file ----
+  saveRDS(fish_long, "fish_long_cleaned.rds")
+  message("✅ Saved 'fish_long_cleaned.rds' with standardized names and cleaned structure.")
   return(fish_long)
 }
 
-
-# Use the function to clean the data 
+# ---- Run cleaning ----
 fish_long <- clean_data(file_path)
-fish_long$Duration <- as.integer(fish_long$Duration)
-
-# get rid of columns we don't need for this analyiss 
-fish_long <- fish_long %>%
-  select(-Time, -Duration, -Depth, -Visibility, -Weather, -Current, -Boats, -total_N)
-
-
-# remove outliers (barracudas, rays, porcupine/puffers, and eels # NOT DONE RN 
-fish_long <- fish_long %>%
-  # filter(!Species %in% c("Barracuda", "Eel", "Porcupine.Puffer", "Ray")) %>% # for now taking this out, lets see how it goes with barracudas
-  filter(Researcher != "Keisha")
-
-# check sites 
-table(fish_long$Site)
-# rename no name 
-fish_long$Site <- fct_recode(fish_long$Site, "No Name Pinnacle" = "No Name")
-
-# retain sites and apply paired column 
-fish_long <- fish_long %>%
-  mutate(pair = case_when(
-    Site %in% c("Aow Mao", "Aow Mao Wreck") ~ "Aow Mao",
-    Site %in% c("No Name Pinnacle", "No Name Wreck") ~ "No Name",
-    Site %in% c("Hin Pee Wee", "Sattakut") ~ "Sattakut"
-  )) %>%
-  filter(!is.na(pair))
-fish_long <- fish_long %>%
-  mutate(Type = recode(Type,
-                       "Artifical" = "Artificial")) %>%
-  mutate(Type = factor(Type))   # make sure it's a proper factor
-
-# check sites and pairs 
-fish_long %>%
-  count(pair, Site) %>%
-  arrange(pair, Site)
-
-# add column to indicate pre-vs post deployment 
-fish_long <- fish_long %>%
-  mutate(deployment_period = case_when(
-    pair == "Sattakut" ~ "Post",  # override
-    Date < as.Date("2023-09-07") ~ "Pre",
-    TRUE ~ "Post"
-  ))
-
-
-# fix a weird NA 
-fish_long <- fish_long %>%
-  mutate(Count = replace_na(Count, 0))
-
-# Save cleaned fish_long object
-saveRDS(fish_long, file = "fish_long_cleaned.rds")
-

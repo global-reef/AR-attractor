@@ -2,7 +2,6 @@
 library(dplyr)
 library(ggplot2)
 
-
 # total abund between reef types 
 fish_long %>%
   group_by(Type) %>%
