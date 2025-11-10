@@ -75,17 +75,19 @@ This repository isolates the *attractor* question:
 
 The **producer** repository will assess whether wrecks generate *new* fish biomass through recruitment and growth.
 
-## Notes
------
+---
 
+## Notes
 - Survey data are collected by Global Reef researchers based in Koh Tao, Thailand.
 - Fieldwork and data processing are ongoing; results may be updated as more surveys are completed.
 - This project contributes to understanding the ecological role of mid-shelf reef features in regional conservation planning.
 
+---
+
 ## License
--------
 
 This project is private and not licensed for redistribution. For collaboration inquiries, please contact scarlett@global-reef.com.
+
 ---
 
 **Affiliation:** [Global Reef](https://global-reef.com), Koh Tao, Thailand  
