@@ -14,10 +14,10 @@ The complementary “producer” half of this project is hosted separately in [`
 ---
 
 ## 🎯 Objectives  
-- Quantify fish assemblage structure and abundance on newly deployed wrecks vs nearby natural reefs.  
+- Quantify fish assemblage structure and abundance on newly deployed wrecks. 
 - Test whether observed assemblages indicate attraction of existing reef fish.  
 - Explore responses by **functional group** (e.g., grazers, invertivores, mesopredators, higher-trophic predators).  
-- Provide management-relevant guidance for future AR deployments under Thailand’s DMCR program.
+- Provide management-relevant guidance for future AR deployments and for publication.
 
 ---
 
@@ -80,7 +80,7 @@ The **producer** repository will assess whether wrecks generate *new* fish bioma
 ## Notes
 - Survey data are collected by Global Reef researchers based in Koh Tao, Thailand.
 - Fieldwork and data processing are ongoing; results may be updated as more surveys are completed.
-- This project contributes to understanding the ecological role of mid-shelf reef features in regional conservation planning.
+- This project contributes to understanding the ecological role of intentional shipwrecks in regional conservation planning.
 
 ---
 
