@@ -1,0 +1,147 @@
+ Family: negbinomial 
+  Links: mu = log; shape = identity 
+Formula: Count ~ type * fgroup + s(date_num, by = interaction(type, fgroup, pair), k = 4) + type * period + (1 | pair/site) 
+   Data: structure(list(site = structure(c(3L, 3L, 3L, 3L,  (Number of observations: 10672) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Smoothing Spline Hyperparameters:
+                                                                          Estimate Est.Error l-95% CI
+sds(sdate_numinteractiontypefgrouppairArtificial.Grazer.AowMao_1)             3.21      2.04     0.39
+sds(sdate_numinteractiontypefgrouppairNatural.Grazer.AowMao_1)                1.69      1.49     0.06
+sds(sdate_numinteractiontypefgrouppairArtificial.Invertivore.AowMao_1)        2.29      1.78     0.12
+sds(sdate_numinteractiontypefgrouppairNatural.Invertivore.AowMao_1)           1.41      1.27     0.05
+sds(sdate_numinteractiontypefgrouppairArtificial.Mesopredator.AowMao_1)       3.62      2.04     0.88
+sds(sdate_numinteractiontypefgrouppairNatural.Mesopredator.AowMao_1)          2.87      1.80     0.35
+sds(sdate_numinteractiontypefgrouppairArtificial.HTLP.AowMao_1)               2.97      2.07     0.31
+sds(sdate_numinteractiontypefgrouppairNatural.HTLP.AowMao_1)                  6.05      2.94     2.59
+sds(sdate_numinteractiontypefgrouppairArtificial.Grazer.NoName_1)             1.56      1.50     0.05
+sds(sdate_numinteractiontypefgrouppairNatural.Grazer.NoName_1)                1.23      1.18     0.04
+sds(sdate_numinteractiontypefgrouppairArtificial.Invertivore.NoName_1)        1.35      1.39     0.04
+sds(sdate_numinteractiontypefgrouppairNatural.Invertivore.NoName_1)           1.44      1.43     0.04
+sds(sdate_numinteractiontypefgrouppairArtificial.Mesopredator.NoName_1)       3.35      2.37     0.25
+sds(sdate_numinteractiontypefgrouppairNatural.Mesopredator.NoName_1)          1.49      1.33     0.05
+sds(sdate_numinteractiontypefgrouppairArtificial.HTLP.NoName_1)               3.58      2.07     0.74
+sds(sdate_numinteractiontypefgrouppairNatural.HTLP.NoName_1)                  1.70      1.55     0.06
+sds(sdate_numinteractiontypefgrouppairArtificial.Grazer.Sattakut_1)           2.37      1.99     0.09
+sds(sdate_numinteractiontypefgrouppairNatural.Grazer.Sattakut_1)              1.48      1.36     0.05
+sds(sdate_numinteractiontypefgrouppairArtificial.Invertivore.Sattakut_1)      2.35      1.68     0.24
+sds(sdate_numinteractiontypefgrouppairNatural.Invertivore.Sattakut_1)         1.90      1.59     0.08
+sds(sdate_numinteractiontypefgrouppairArtificial.Mesopredator.Sattakut_1)     1.11      1.13     0.03
+sds(sdate_numinteractiontypefgrouppairNatural.Mesopredator.Sattakut_1)        1.11      1.09     0.03
+sds(sdate_numinteractiontypefgrouppairArtificial.HTLP.Sattakut_1)             3.43      2.25     0.36
+sds(sdate_numinteractiontypefgrouppairNatural.HTLP.Sattakut_1)                2.24      1.48     0.35
+                                                                          u-95% CI Rhat Bulk_ESS Tail_ESS
+sds(sdate_numinteractiontypefgrouppairArtificial.Grazer.AowMao_1)             8.05 1.00     3554     2650
+sds(sdate_numinteractiontypefgrouppairNatural.Grazer.AowMao_1)                5.51 1.00     4204     3864
+sds(sdate_numinteractiontypefgrouppairArtificial.Invertivore.AowMao_1)        6.54 1.00     3289     3785
+sds(sdate_numinteractiontypefgrouppairNatural.Invertivore.AowMao_1)           4.79 1.00     3704     4153
+sds(sdate_numinteractiontypefgrouppairArtificial.Mesopredator.AowMao_1)       8.49 1.00     4130     3592
+sds(sdate_numinteractiontypefgrouppairNatural.Mesopredator.AowMao_1)          7.31 1.00     4341     3296
+sds(sdate_numinteractiontypefgrouppairArtificial.HTLP.AowMao_1)               7.82 1.00     4241     3093
+sds(sdate_numinteractiontypefgrouppairNatural.HTLP.AowMao_1)                 13.08 1.00     5785     5503
+sds(sdate_numinteractiontypefgrouppairArtificial.Grazer.NoName_1)             5.29 1.00     4831     4267
+sds(sdate_numinteractiontypefgrouppairNatural.Grazer.NoName_1)                4.34 1.00     4614     4452
+sds(sdate_numinteractiontypefgrouppairArtificial.Invertivore.NoName_1)        4.57 1.00     4675     4158
+sds(sdate_numinteractiontypefgrouppairNatural.Invertivore.NoName_1)           5.04 1.00     3882     4459
+sds(sdate_numinteractiontypefgrouppairArtificial.Mesopredator.NoName_1)       8.96 1.00     2975     2373
+sds(sdate_numinteractiontypefgrouppairNatural.Mesopredator.NoName_1)          4.91 1.00     4398     3899
+sds(sdate_numinteractiontypefgrouppairArtificial.HTLP.NoName_1)               8.81 1.00     4000     2564
+sds(sdate_numinteractiontypefgrouppairNatural.HTLP.NoName_1)                  5.75 1.00     4836     4422
+sds(sdate_numinteractiontypefgrouppairArtificial.Grazer.Sattakut_1)           7.02 1.00     3252     3012
+sds(sdate_numinteractiontypefgrouppairNatural.Grazer.Sattakut_1)              4.99 1.00     5414     3441
+sds(sdate_numinteractiontypefgrouppairArtificial.Invertivore.Sattakut_1)      6.43 1.00     3597     2992
+sds(sdate_numinteractiontypefgrouppairNatural.Invertivore.Sattakut_1)         5.82 1.00     3782     3815
+sds(sdate_numinteractiontypefgrouppairArtificial.Mesopredator.Sattakut_1)     4.03 1.00     4487     4617
+sds(sdate_numinteractiontypefgrouppairNatural.Mesopredator.Sattakut_1)        4.03 1.00     3855     4039
+sds(sdate_numinteractiontypefgrouppairArtificial.HTLP.Sattakut_1)             8.69 1.00     3034     2041
+sds(sdate_numinteractiontypefgrouppairNatural.HTLP.Sattakut_1)                5.91 1.00     3811     3144
+
+Multilevel Hyperparameters:
+~pair (Number of levels: 3) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.80      0.55     0.05     2.21 1.00     3387     3197
+
+~pair:site (Number of levels: 6) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.55      0.35     0.16     1.49 1.00     2919     4114
+
+Regression Coefficients:
+                                                                      Estimate Est.Error l-95% CI u-95% CI
+Intercept                                                                 2.14      0.66     0.79     3.48
+typeNatural                                                               0.43      0.54    -0.67     1.47
+fgroupInvertivore                                                        -3.24      0.10    -3.44    -3.04
+fgroupMesopredator                                                       -1.17      0.11    -1.39    -0.96
+fgroupHTLP                                                               -0.83      0.11    -1.05    -0.61
+periodPost                                                                0.75      0.20     0.36     1.14
+typeNatural:fgroupInvertivore                                             0.73      0.13     0.48     0.99
+typeNatural:fgroupMesopredator                                            0.38      0.14     0.11     0.65
+typeNatural:fgroupHTLP                                                   -0.04      0.15    -0.34     0.26
+typeNatural:periodPost                                                   -0.57      0.26    -1.06    -0.05
+sdate_num:interactiontypefgrouppairArtificial.Grazer.AowMao_1             0.35      1.70    -2.87     3.81
+sdate_num:interactiontypefgrouppairNatural.Grazer.AowMao_1                1.00      1.51    -2.29     3.57
+sdate_num:interactiontypefgrouppairArtificial.Invertivore.AowMao_1        0.28      1.49    -2.75     3.30
+sdate_num:interactiontypefgrouppairNatural.Invertivore.AowMao_1           0.18      1.35    -2.12     3.25
+sdate_num:interactiontypefgrouppairArtificial.Mesopredator.AowMao_1       1.41      2.11    -2.71     5.51
+sdate_num:interactiontypefgrouppairNatural.Mesopredator.AowMao_1         -0.67      2.07    -4.52     3.39
+sdate_num:interactiontypefgrouppairArtificial.HTLP.AowMao_1               2.56      2.03    -1.44     6.41
+sdate_num:interactiontypefgrouppairNatural.HTLP.AowMao_1                 -2.47      2.00    -6.43     1.39
+sdate_num:interactiontypefgrouppairArtificial.Grazer.NoName_1            -1.03      1.55    -3.69     2.38
+sdate_num:interactiontypefgrouppairNatural.Grazer.NoName_1               -1.08      1.20    -3.36     1.43
+sdate_num:interactiontypefgrouppairArtificial.Invertivore.NoName_1       -0.49      1.36    -3.18     2.40
+sdate_num:interactiontypefgrouppairNatural.Invertivore.NoName_1          -0.93      1.31    -3.03     2.10
+sdate_num:interactiontypefgrouppairArtificial.Mesopredator.NoName_1      -2.30      1.73    -5.65     1.19
+sdate_num:interactiontypefgrouppairNatural.Mesopredator.NoName_1         -0.96      1.40    -3.32     2.23
+sdate_num:interactiontypefgrouppairArtificial.HTLP.NoName_1               0.33      1.94    -3.40     4.20
+sdate_num:interactiontypefgrouppairNatural.HTLP.NoName_1                  0.46      1.54    -2.29     3.77
+sdate_num:interactiontypefgrouppairArtificial.Grazer.Sattakut_1           2.74      1.60    -0.57     5.75
+sdate_num:interactiontypefgrouppairNatural.Grazer.Sattakut_1              1.26      1.42    -1.60     4.10
+sdate_num:interactiontypefgrouppairArtificial.Invertivore.Sattakut_1     -0.49      1.59    -3.78     2.32
+sdate_num:interactiontypefgrouppairNatural.Invertivore.Sattakut_1         1.86      1.63    -0.84     5.37
+sdate_num:interactiontypefgrouppairArtificial.Mesopredator.Sattakut_1    -1.37      1.08    -3.83     0.61
+sdate_num:interactiontypefgrouppairNatural.Mesopredator.Sattakut_1        2.15      1.09    -0.18     4.22
+sdate_num:interactiontypefgrouppairArtificial.HTLP.Sattakut_1             3.21      1.78    -0.40     6.52
+sdate_num:interactiontypefgrouppairNatural.HTLP.Sattakut_1               -1.88      1.38    -4.78     0.60
+                                                                      Rhat Bulk_ESS Tail_ESS
+Intercept                                                             1.00     4157     3817
+typeNatural                                                           1.00     4890     4123
+fgroupInvertivore                                                     1.00     4279     5665
+fgroupMesopredator                                                    1.00     4426     5802
+fgroupHTLP                                                            1.00     4648     5802
+periodPost                                                            1.00     5990     6079
+typeNatural:fgroupInvertivore                                         1.00     4493     5603
+typeNatural:fgroupMesopredator                                        1.00     4639     5975
+typeNatural:fgroupHTLP                                                1.00     5033     6218
+typeNatural:periodPost                                                1.00     6342     5572
+sdate_num:interactiontypefgrouppairArtificial.Grazer.AowMao_1         1.00     7538     5631
+sdate_num:interactiontypefgrouppairNatural.Grazer.AowMao_1            1.00     7407     5623
+sdate_num:interactiontypefgrouppairArtificial.Invertivore.AowMao_1    1.00     7941     5733
+sdate_num:interactiontypefgrouppairNatural.Invertivore.AowMao_1       1.00     5360     5624
+sdate_num:interactiontypefgrouppairArtificial.Mesopredator.AowMao_1   1.00     5704     3599
+sdate_num:interactiontypefgrouppairNatural.Mesopredator.AowMao_1      1.00     5210     3854
+sdate_num:interactiontypefgrouppairArtificial.HTLP.AowMao_1           1.00     5293     4774
+sdate_num:interactiontypefgrouppairNatural.HTLP.AowMao_1              1.00    10757     5599
+sdate_num:interactiontypefgrouppairArtificial.Grazer.NoName_1         1.00     6772     5940
+sdate_num:interactiontypefgrouppairNatural.Grazer.NoName_1            1.00     8217     5553
+sdate_num:interactiontypefgrouppairArtificial.Invertivore.NoName_1    1.00     7303     5175
+sdate_num:interactiontypefgrouppairNatural.Invertivore.NoName_1       1.00     5251     5287
+sdate_num:interactiontypefgrouppairArtificial.Mesopredator.NoName_1   1.00     9562     6297
+sdate_num:interactiontypefgrouppairNatural.Mesopredator.NoName_1      1.00     5866     5665
+sdate_num:interactiontypefgrouppairArtificial.HTLP.NoName_1           1.00     6690     4028
+sdate_num:interactiontypefgrouppairNatural.HTLP.NoName_1              1.00     6643     5434
+sdate_num:interactiontypefgrouppairArtificial.Grazer.Sattakut_1       1.00     8983     6108
+sdate_num:interactiontypefgrouppairNatural.Grazer.Sattakut_1          1.00     9528     6002
+sdate_num:interactiontypefgrouppairArtificial.Invertivore.Sattakut_1  1.00     5110     5844
+sdate_num:interactiontypefgrouppairNatural.Invertivore.Sattakut_1     1.00     4557     5714
+sdate_num:interactiontypefgrouppairArtificial.Mesopredator.Sattakut_1 1.00     7157     4977
+sdate_num:interactiontypefgrouppairNatural.Mesopredator.Sattakut_1    1.00     6632     4893
+sdate_num:interactiontypefgrouppairArtificial.HTLP.Sattakut_1         1.00     6674     6179
+sdate_num:interactiontypefgrouppairNatural.HTLP.Sattakut_1            1.00     6235     5566
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+shape     0.29      0.01     0.28     0.30 1.00    12066     5466
+
+Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).

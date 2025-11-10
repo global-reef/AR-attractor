@@ -1,0 +1,39 @@
+ Family: negbinomial 
+  Links: mu = log; shape = identity 
+Formula: Count ~ Type * Functional_Group + s(date_num, by = Type, k = 6) + Type * deployment_period + (1 | Site) 
+   Data: fish_long (Number of observations: 10074) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Smoothing Spline Hyperparameters:
+                               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sds(sdate_numTypeArtificial_1)     0.24      0.21     0.01     0.78 1.00     3936     4381
+sds(sdate_numTypeNatural_1)        1.63      0.77     0.50     3.52 1.00     3217     3058
+
+Multilevel Hyperparameters:
+~Site (Number of levels: 6) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.94      0.42     0.46     2.02 1.00     2859     4149
+
+Regression Coefficients:
+                                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept                             1.01      0.46     0.07     1.86 1.00     3651     3824
+TypeNatural                           0.76      0.28     0.21     1.29 1.00     7131     5749
+Functional_Group.L                   -0.03      0.08    -0.18     0.12 1.00     9620     6407
+Functional_Group.Q                    1.70      0.07     1.56     1.85 1.00     8103     5982
+Functional_Group.C                   -1.65      0.06    -1.76    -1.53 1.00     8972     6112
+deployment_periodPost                 0.65      0.15     0.35     0.94 1.00     7004     5951
+TypeNatural:Functional_Group.L       -0.18      0.10    -0.38     0.03 1.00     9097     6053
+TypeNatural:Functional_Group.Q       -0.47      0.09    -0.65    -0.28 1.00     8393     6230
+TypeNatural:Functional_Group.C        0.29      0.08     0.13     0.44 1.00     9024     6412
+TypeNatural:deployment_periodPost    -0.94      0.20    -1.35    -0.54 1.00     6296     5688
+sdate_num:TypeArtificial_1            0.45      0.50    -0.29     1.70 1.00     5290     5048
+sdate_num:TypeNatural_1               0.94      0.74    -0.50     2.42 1.00     8170     5063
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+shape     0.28      0.01     0.27     0.29 1.00    12777     6149
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).

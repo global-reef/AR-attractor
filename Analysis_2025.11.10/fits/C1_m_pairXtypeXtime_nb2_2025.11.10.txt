@@ -1,0 +1,80 @@
+MODEL C1: NB2 with pair*type*date_num (+ type*fgroup + type*(date_num+period))
+
+ Family: nbinom2  ( log )
+Formula:          
+Count ~ type * fgroup + type * (date_num + period) + pair * type *  
+    date_num + (1 | site)
+Data: valid_fun_groups
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  32176.0   32307.7  -16068.0   32136.0      5326 
+
+Random effects:
+
+Conditional model:
+ Groups Name        Variance  Std.Dev. 
+ site   (Intercept) 1.887e-09 4.345e-05
+Number of obs: 5346, groups:  site, 6
+
+Dispersion parameter for nbinom2 family (): 0.356 
+
+Conditional model:
+                                    Estimate Std. Error z value
+(Intercept)                       -0.0721455  0.2297257  -0.314
+typeNatural                        3.6228307  0.3289597  11.013
+fgroupMesopredator                -0.5214667  0.1082279  -4.818
+fgroupHTLP                        -0.8593865  0.0959059  -8.961
+date_num                           0.0013163  0.0002198   5.988
+periodPost                         1.6524911  0.1949656   8.476
+pairNo Name                        2.4535386  0.2732813   8.978
+pairSattakut                       1.8745565  0.2506725   7.478
+typeNatural:fgroupMesopredator    -0.2031775  0.1353227  -1.501
+typeNatural:fgroupHTLP            -0.6210943  0.1319171  -4.708
+typeNatural:date_num              -0.0028035  0.0003147  -8.910
+typeNatural:periodPost            -1.4346952  0.2775528  -5.169
+typeNatural:pairNo Name           -3.3072437  0.3760408  -8.795
+typeNatural:pairSattakut          -1.6043557  0.3551166  -4.518
+date_num:pairNo Name              -0.0033831  0.0003223 -10.496
+date_num:pairSattakut             -0.0011675  0.0002935  -3.978
+typeNatural:date_num:pairNo Name   0.0041687  0.0004386   9.504
+typeNatural:date_num:pairSattakut  0.0028303  0.0004134   6.847
+                                  Pr(>|z|)    
+(Intercept)                          0.753    
+typeNatural                        < 2e-16 ***
+fgroupMesopredator                1.45e-06 ***
+fgroupHTLP                         < 2e-16 ***
+date_num                          2.12e-09 ***
+periodPost                         < 2e-16 ***
+pairNo Name                        < 2e-16 ***
+pairSattakut                      7.54e-14 ***
+typeNatural:fgroupMesopredator       0.133    
+typeNatural:fgroupHTLP            2.50e-06 ***
+typeNatural:date_num               < 2e-16 ***
+typeNatural:periodPost            2.35e-07 ***
+typeNatural:pairNo Name            < 2e-16 ***
+typeNatural:pairSattakut          6.25e-06 ***
+date_num:pairNo Name               < 2e-16 ***
+date_num:pairSattakut             6.94e-05 ***
+typeNatural:date_num:pairNo Name   < 2e-16 ***
+typeNatural:date_num:pairSattakut 7.54e-12 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Type-II Anova (car::Anova):
+Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: Count
+                      Chisq Df Pr(>Chisq)    
+type                 4.9076  1   0.026739 *  
+fgroup             324.5039  2  < 2.2e-16 ***
+date_num             4.2366  1   0.039560 *  
+period              46.2795  1  1.025e-11 ***
+pair               562.0284  2  < 2.2e-16 ***
+type:fgroup         23.8444  2  6.641e-06 ***
+type:date_num        9.6524  1   0.001891 ** 
+type:period         26.7195  1  2.352e-07 ***
+type:pair           26.3274  2  1.919e-06 ***
+date_num:pair       42.3530  2  6.356e-10 ***
+type:date_num:pair 100.8054  2  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

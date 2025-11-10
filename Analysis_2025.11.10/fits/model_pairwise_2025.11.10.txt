@@ -1,0 +1,35 @@
+ Family: nbinom2  ( log )
+Formula:          Count ~ type * period * pair + fgroup + (1 | site)
+Data: fish_long
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  43256.5   43363.5  -21613.3   43226.5      9219 
+
+Random effects:
+
+Conditional model:
+ Groups Name        Variance  Std.Dev.
+ site   (Intercept) 1.282e-09 3.58e-05
+Number of obs: 9234, groups:  site, 6
+
+Dispersion parameter for nbinom2 family (): 0.367 
+
+Conditional model:
+                                    Estimate Std. Error z value Pr(>|z|)    
+(Intercept)                          0.18047    0.27140    0.66    0.506    
+typeNatural                          2.68625    0.32417    8.29  < 2e-16 ***
+periodPost                           2.20943    0.27331    8.08 6.26e-16 ***
+pairNo Name                          1.61580    0.30275    5.34 9.45e-08 ***
+pairSattakut                         0.83355    0.07518   11.09  < 2e-16 ***
+fgroupInvertivore                   -2.69790    0.05466  -49.35  < 2e-16 ***
+fgroupMesopredator                  -0.36928    0.06101   -6.05 1.42e-09 ***
+fgroupHTLP                          -0.78167    0.06138  -12.73  < 2e-16 ***
+typeNatural:periodPost              -2.49777    0.33100   -7.55 4.49e-14 ***
+typeNatural:pairNo Name             -1.72736    0.37012   -4.67 3.06e-06 ***
+typeNatural:pairSattakut            -0.01638    0.09812   -0.17    0.867    
+periodPost:pairNo Name              -1.69963    0.31152   -5.46 4.87e-08 ***
+periodPost:pairSattakut                   NA         NA      NA       NA    
+typeNatural:periodPost:pairNo Name   1.61626    0.38282    4.22 2.42e-05 ***
+typeNatural:periodPost:pairSattakut       NA         NA      NA       NA    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

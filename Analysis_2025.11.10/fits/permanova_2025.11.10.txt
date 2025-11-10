@@ -1,0 +1,22 @@
+Permutation test for adonis under reduced model
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = bray_dist ~ type, data = meta_df, permutations = 999, method = "bray")
+          Df SumOfSqs      R2      F Pr(>F)    
+Model      1    8.640 0.12102 40.615  0.001 ***
+Residual 295   62.755 0.87898                  
+Total    296   71.395 1.00000                  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+BETADISPER:
+Analysis of Variance Table
+
+Response: Distances
+           Df Sum Sq Mean Sq F value    Pr(>F)    
+Groups      1 0.2432 0.24321   16.59 5.967e-05 ***
+Residuals 295 4.3247 0.01466                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

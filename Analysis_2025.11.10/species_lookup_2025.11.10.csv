@@ -1,0 +1,24 @@
+Species,Functional_Group,Genus,Species_epithet,sci_name
+Parrotfish,Grazer,Scarus,spp.,Scarus spp.
+Rabbitfish,Grazer,Siganus,spp.,Siganus spp.
+Butterflyfish,Grazer,Chaetodon,spp.,Chaetodon spp.
+Angelfish,Invertivore,Pomacanthus,spp.,Pomacanthus spp.
+Cleaner_Wrasse,Invertivore,Labroides,dimidiatus,Labroides dimidiatus
+Batfish,Invertivore,Ephippidae,spp.,Ephippidae spp.
+Thicklip,Invertivore,Hemigymnus,melapterus,Hemigymnus melapterus
+Red_Breast,Invertivore,Cheilinus,fasciatus,Cheilinus fasciatus
+Slingjaw,Invertivore,Epibulus,insidiator,Epibulus insidiator
+Sweetlips,Invertivore,Diagramma/Plectorhinchus,spp.,Diagramma/ Plectorhinchus spp.
+Squirrel.Soldier,Invertivore,Holocentridae,spp.,Holocentridae spp.
+Triggerfish,Invertivore,Balistidae,spp.,Balistidae spp.
+Porcupine.Puffer,Invertivore,Diodon/Tetraodon,spp.,Diodon/ Tetraodon spp.
+Ray,Mesopredator,Taeniura/Neotrygon,spp.,Taeniura/ Neotrygon spp.
+Russels_Snapper,Mesopredator,Lutjanus,russellii,Lutjanus russellii
+Brown_Stripe_Snapper,Mesopredator,Lutjanus,vitti,Lutjanus vitti
+lrg_Snapper,HTLP,Lutjanus,spp.,Lutjanus (>30cm) spp.
+Eel,Mesopredator,Gymnothorax,spp.,Gymnothorax spp.
+Trevally,HTLP,Caranx,spp.,Caranx spp.
+Emperorfish,Mesopredator,Lethrinus,spp.,Lethrinus spp.
+sml_Grouper,Mesopredator,Cephalopholis/Epinephelus,spp.,Cephalopholis/ Epinephelus spp.
+lrg_Grouper,HTLP,Epinephelus,spp.,Epinephelus (>30cm)/ Plectropomus spp.
+Barracuda,HTLP,Sphyraena,spp.,Sphyraena spp.

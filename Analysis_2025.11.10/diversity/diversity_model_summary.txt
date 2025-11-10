@@ -1,0 +1,61 @@
+
+LMM summary
+Linear mixed model fit by REML. t-tests use Satterthwaite's method ['lmerModLmerTest']
+Formula: shannon ~ type * (date_num + period) + (1 + date_num || site)
+   Data: shannon_data
+
+REML criterion at convergence: 159
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.7293 -0.5429  0.0641  0.6953  2.7061 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ site     (Intercept) 0.01552  0.1246  
+ site.1   date_num    0.00000  0.0000  
+ Residual             0.08391  0.2897  
+Number of obs: 297, groups:  site, 6
+
+Fixed effects:
+                         Estimate Std. Error         df t value Pr(>|t|)    
+(Intercept)            -2.991e+00  2.037e+00  2.903e+02  -1.468 0.143196    
+typeNatural             4.759e+00  2.898e+00  2.899e+02   1.642 0.101725    
+date_num                1.984e-04  1.040e-04  2.901e+02   1.908 0.057412 .  
+periodPost              6.132e-01  1.584e-01  2.891e+02   3.871 0.000134 ***
+typeNatural:date_num   -1.953e-04  1.482e-04  2.895e+02  -1.318 0.188596    
+typeNatural:periodPost -6.253e-01  2.014e-01  2.893e+02  -3.105 0.002090 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Correlation of Fixed Effects:
+            (Intr) typNtr dat_nm prdPst typN:_
+typeNatural -0.703                            
+date_num    -0.997  0.701                     
+periodPost   0.293 -0.206 -0.360              
+typNtrl:dt_  0.699 -0.997 -0.702  0.253       
+typNtrl:prP -0.231  0.366  0.283 -0.787 -0.422
+fit warnings:
+Some predictor variables are on very different scales: consider rescaling
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')
+
+
+Type II/III (car::Anova) for LMM
+Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: shannon
+               Chisq Df Pr(>Chisq)   
+type          4.8805  1   0.027162 * 
+date_num      1.9036  1   0.167678   
+period        5.3554  1   0.020658 * 
+type:date_num 1.7367  1   0.187554   
+type:period   9.6424  1   0.001901 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+DiD contrast (typeNatural:periodPost)
+                                         term   estimate std.error       df   t.value     p.value  conf.low
+typeNatural:periodPost typeNatural:periodPost -0.6253161 0.2013762 289.3148 -3.105214 0.002089938 -1.021664
+                       conf.high
+typeNatural:periodPost -0.228968

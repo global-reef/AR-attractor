@@ -1,0 +1,50 @@
+MODEL A: Count ~ type * fgroup + (1|site) [NB2]
+
+ Family: nbinom2  ( log )
+Formula:          Count ~ type * fgroup + (1 | site)
+Data: d
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  43213.7   43285.0  -21596.8   43193.7      9224 
+
+Random effects:
+
+Conditional model:
+ Groups Name        Variance Std.Dev.
+ site   (Intercept) 0.2185   0.4675  
+Number of obs: 9234, groups:  site, 6
+
+Dispersion parameter for nbinom2 family (): 0.369 
+
+Conditional model:
+                               Estimate Std. Error z value Pr(>|z|)
+(Intercept)                     2.67480    0.27871    9.60  < 2e-16
+typeNatural                     0.11344    0.39238    0.29 0.772497
+fgroupInvertivore              -3.18451    0.08756  -36.37  < 2e-16
+fgroupMesopredator             -0.30192    0.09734   -3.10 0.001925
+fgroupHTLP                     -0.59622    0.09039   -6.60 4.22e-11
+typeNatural:fgroupInvertivore   0.73748    0.11196    6.59 4.50e-11
+typeNatural:fgroupMesopredator -0.16588    0.12404   -1.34 0.181116
+typeNatural:fgroupHTLP         -0.41713    0.12322   -3.39 0.000711
+                                  
+(Intercept)                    ***
+typeNatural                       
+fgroupInvertivore              ***
+fgroupMesopredator             ** 
+fgroupHTLP                     ***
+typeNatural:fgroupInvertivore  ***
+typeNatural:fgroupMesopredator    
+typeNatural:fgroupHTLP         ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Type-II Anova (car::Anova):
+Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: Count
+                Chisq Df Pr(>Chisq)    
+type           0.3185  1     0.5725    
+fgroup      3556.3803  3     <2e-16 ***
+type:fgroup  142.1232  3     <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

@@ -1,180 +1,179 @@
+#### 03_DIVERSITY #######################
+suppressPackageStartupMessages({
+  library(vegan)
+  library(lmerTest)
+  library(car)
+  library(ggplot2)
+  library(dplyr)
+  library(tidyr)
+})
 
-library(vegan)
-library(brms)
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(tidybayes)
-library(loo)
-
-# assumes 00.SET defined output_dir and brm_m2()
-fish_long <- readRDS("fish_long_cleaned.rds")
-deployment_date <- as.Date("2023-09-07")
-reef_cols <- c("Natural" = "#66BFA6", "Artificial" = "#007A87")
-
-# 1) Shannon diversity per survey -------------------------------------------
-shannon <- fish_long %>%
-  group_by(survey_id, Species) %>%
-  summarise(count = sum(Count), .groups = "drop") %>%
-  pivot_wider(names_from = Species, values_from = count, values_fill = 0) %>%
-  rowwise() %>%
-  mutate(shannon = diversity(c_across(where(is.numeric)))) %>%
-  ungroup()
-
-meta <- fish_long %>%
-  distinct(survey_id, site, pair, type, period, Researcher, Date)
-
-shannon_data <- left_join(shannon, meta, by = "survey_id") %>%
-  mutate(
-    date_num = as.numeric(Date),                 # continuous time for spline
-    period   = factor(period, levels = c("Pre","Post")),
-    type     = factor(type,   levels = c("Artificial","Natural"))
-  )
-
-# 2) Exploratory plots --------------------------------------------------------
-# a) by reef type
-s_type <- ggplot(shannon_data, aes(x = type, y = shannon, color = type)) +
-  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
-  geom_jitter(width = 0.2, alpha = 0.6, size = 0.8) +
-  scale_color_manual(values = reef_cols) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
-  labs(x = "Reef Type", y = "Shannon diversity", title = "Shannon by reef type") +
-  theme_minimal()
-
-# b) by site (keep your preferred order if present)
-site_order <- c("Aow Mao","Aow Mao Wreck","No Name Pinnacle","No Name Wreck","Hin Pee Wee","Sattakut")
-shannon_data$site <- factor(shannon_data$site, levels = site_order)
-
-s_site <- ggplot(shannon_data, aes(x = site, y = shannon, color = type)) +
-  geom_boxplot(alpha = 0.6, outlier.shape = NA, position = position_dodge(width = 0.75)) +
-  geom_jitter(width = 0.2, alpha = 0.6, size = 0.8) +
-  scale_color_manual(values = reef_cols) +
-  labs(x = "Site", y = "Shannon diversity", title = "Shannon by site and reef type") +
-  theme_minimal()
-
-# c) by pair
-s_pair <- ggplot(shannon_data, aes(x = site, y = shannon, color = type)) +
-  geom_boxplot(alpha = 0.6, outlier.shape = NA, position = position_dodge(width = 0.75)) +
-  geom_jitter(width = 0.2, alpha = 0.6, size = 1) +
-  scale_color_manual(values = reef_cols) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
-  facet_wrap(~ pair, scales = "free_x") +
-  labs(x = "Site", y = "Shannon diversity", title = "Shannon by site within pairs") +
-  theme_minimal()
-
-# 3) Hierarchical Bayesian model ---------------------------------------------
-priors_shannon <- c(
-  set_prior("normal(1.8, 0.5)", class = "Intercept"),
-  set_prior("normal(0, 0.5)", class = "b"),
-  set_prior("student_t(3, 0, 0.3)", class = "sds"),
-  set_prior("student_t(3, 0, 0.3)", class = "sigma"),
-  set_prior("student_t(3, 0, 0.5)", class = "sd")
-)
-
-fit_shannon_pair_spline <- brm_m2(
-  shannon ~ s(date_num, by = interaction(pair, type), k = 6) +
-    type * period + (1 | site),
-  data   = shannon_data,
-  family = gaussian(),
-  prior  = priors_shannon
-)
-
-# 4) Outputs ------------------------------------------------------------------
-summary(fit_shannon_pair_spline)
-bayes_R2(fit_shannon_pair_spline)
-s_check <- pp_check(fit_shannon_pair_spline)
-
-# 5) Posterior predictions ----------------------------------------------------
-pred_grid <- expand.grid(
-  site = unique(shannon_data$site),
-  type = levels(shannon_data$type),
-  Date = seq(min(shannon_data$Date), max(shannon_data$Date), length.out = 200)
-) %>%
-  mutate(
-    date_num = as.numeric(Date),
-    period   = factor(if_else(Date < deployment_date, "Pre", "Post"), levels = c("Pre","Post"))
-  ) %>%
-  left_join(shannon_data %>% distinct(site, pair), by = "site")
-
-preds <- add_epred_draws(fit_shannon_pair_spline, newdata = pred_grid, re_formula = NULL)
-
-s_bayes <- ggplot(preds, aes(x = Date, y = .epred, color = type, fill = type)) +
-  stat_lineribbon(.width = c(0.5, 0.8, 0.95), alpha = 0.2) +
-  geom_vline(xintercept = deployment_date, linetype = "dashed", color = "gray40") +
-  facet_wrap(~ pair, scales = "free_x") +
-  scale_color_manual(values = reef_cols) +
-  scale_fill_manual(values = reef_cols) +
-  labs(x = "Date", y = "Predicted Shannon diversity",
-       color = "Reef type", fill = "Reef type",
-       title = "Bayesian Shannon trends by site pair") +
-  theme_minimal(base_size = 12)
-
-# 6) Posterior DiD contrast ---------------------------------------------------
-post_did <- as_draws_df(fit_shannon_pair_spline) %>%
-  select(`b_typeNatural:periodPost`)
-
-summary_stats <- post_did %>%
-  summarise(
-    mean = mean(`b_typeNatural:periodPost`),
-    median = median(`b_typeNatural:periodPost`),
-    lower95 = quantile(`b_typeNatural:periodPost`, 0.025),
-    upper95 = quantile(`b_typeNatural:periodPost`, 0.975),
-    prob_less0 = mean(`b_typeNatural:periodPost` < 0),
-    prob_greater0 = mean(`b_typeNatural:periodPost` > 0)
-  )
-print(summary_stats)
-
-s_did <- ggplot(post_did, aes(x = `b_typeNatural:periodPost`)) +
-  geom_density(fill = reef_cols["Natural"], alpha = 0.6) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "gray30") +
-  labs(x = "DiD contrast (Natural vs Artificial, Post–Pre)",
-       y = "Posterior density",
-       title = "Posterior distribution of the DiD effect") +
-  theme_minimal(base_size = 12)
-
-# 7) Save plots and stats -----------------------------------------------------
-ggsave(file.path(output_dir, "Fig1_Shannon_by_ReefType.png"), s_type,  width = 6,  height = 4, dpi = 600)
-ggsave(file.path(output_dir, "Fig2_Shannon_by_Site.png"),     s_site,  width = 8,  height = 4, dpi = 600)
-ggsave(file.path(output_dir, "Fig3_Shannon_by_Pair.png"),     s_pair,  width = 8,  height = 4, dpi = 600)
-ggsave(file.path(output_dir, "Fig4_Bayesian_Shannon_Trends.png"), s_bayes, width = 8, height = 5, dpi = 600)
-ggsave(file.path(output_dir, "Fig5_Posterior_DiD.png"),       s_did,   width = 6,  height = 4, dpi = 600)
-ggsave(file.path(output_dir, "FigS1_Shannon_checks.png"),     s_check, width = 6,  height = 4, dpi = 600)
-
-stats_dir <- file.path(output_dir, "stats", "diversity")
-if (!dir.exists(stats_dir)) dir.create(stats_dir, recursive = TRUE)
-
-sink(file.path(stats_dir, "fit_shannon_pair_spline_summary.txt"))
-print(summary(fit_shannon_pair_spline))
-sink()
-
-post_summary <- as_draws_df(fit_shannon_pair_spline) %>%
-  select(starts_with("b_")) %>%
-  pivot_longer(everything(), names_to = "parameter", values_to = "estimate") %>%
-  group_by(parameter) %>%
-  summarise(
-    mean = mean(estimate),
-    sd = sd(estimate),
-    lower95 = quantile(estimate, 0.025),
-    upper95 = quantile(estimate, 0.975),
-    prob_less0 = mean(estimate < 0),
-    prob_greater0 = mean(estimate > 0),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    interpretation = case_when(
-      prob_greater0 > 0.95 ~ "Strong positive effect",
-      prob_less0 > 0.95 ~ "Strong negative effect",
-      prob_greater0 > 0.75 ~ "Likely positive effect",
-      prob_less0 > 0.75 ~ "Likely negative effect",
-      TRUE ~ "Uncertain / mixed"
+#### diversity_run() ####
+diversity_run <- function(fish_long,
+                          reef_cols = c("Natural" = "#66BFA6", "Artificial" = "#007A87"),
+                          output_dir = NULL,
+                          save_plots = TRUE,
+                          show_plots = FALSE) {
+  #### 1) Data prep ####
+  d <- fish_long %>%
+    dplyr::mutate(
+      Date   = if (inherits(Date, "Date")) Date else as.Date(as.character(Date)),
+      type   = factor(type,   levels = c("Artificial","Natural")),
+      period = factor(period, levels = c("Pre","Post")),
+      site   = factor(site)
     )
-  ) %>% arrange(parameter)
+  
+  # per-survey species matrix
+  sh_wide <- d %>%
+    dplyr::group_by(survey_id, Species) %>%
+    dplyr::summarise(count = sum(Count), .groups = "drop") %>%
+    tidyr::pivot_wider(names_from = Species, values_from = count,
+                       values_fill = list(count = 0))
+  
+  # numeric matrix for vegan::diversity
+  mat <- sh_wide %>%
+    dplyr::select(-survey_id) %>%
+    data.matrix() %>%
+    as.matrix()
+  
+  shannon_data <- tibble::tibble(
+    survey_id = sh_wide$survey_id,
+    shannon   = vegan::diversity(mat)
+  ) %>%
+    dplyr::left_join(
+      d %>% dplyr::distinct(survey_id, site, pair, type, period, Researcher, Date),
+      by = "survey_id"
+    ) %>%
+    dplyr::mutate(
+      date_num = as.numeric(Date),
+      site     = droplevels(site),
+      pair     = droplevels(pair)
+    ) %>%
+    dplyr::filter(!is.na(shannon), !is.na(site), !is.na(type), !is.na(period), !is.na(Date))
+  
+  #### 2) Plots: type, site within pairs ####
+  p_type <- shannon_data %>%
+    ggplot(aes(type, shannon, color = type)) +
+    geom_boxplot(outlier.shape = NA, alpha = 0.7) +
+    geom_jitter(width = 0.2, alpha = 0.6, size = 0.8) +
+    scale_color_manual(values = reef_cols) +
+    labs(x = "Reef type", y = "Shannon", title = "Shannon by reef type", color="Reef Type") +
+    theme_clean
+  
+  p_pair <- shannon_data %>%
+    ggplot(aes(site, shannon, color = type)) +
+    geom_boxplot(outlier.shape = NA, alpha = 0.7, position = position_dodge(0.75)) +
+    geom_jitter(width = 0.2, alpha = 0.6, size = 0.9) +
+    scale_color_manual(values = reef_cols) +
+    facet_wrap(~ pair, scales = "free_x") +
+    labs(x = "Site", y = "Shannon", color = "Reef Type",
+         title = "Shannon diversity by site within pairs") +
+    theme_clean +
+    theme(axis.text.x = element_text(angle = 40, hjust = 1))
+  
+  #### 3) Main model (time-varying mixed model) ####
+  m_lmm <- lmerTest::lmer(
+    shannon ~ type * (date_num + period) + (1 + date_num || site),
+    data = shannon_data, REML = TRUE
+  )
+  
+  # DiD-style contrast: Natural × Post
+  coef_tab <- as.data.frame(summary(m_lmm)$coefficients)
+  coef_tab$term <- rownames(coef_tab)
+  did <- coef_tab %>%
+    dplyr::filter(term == "typeNatural:periodPost") %>%
+    dplyr::transmute(
+      term,
+      estimate  = Estimate,
+      std.error = `Std. Error`,
+      df        = df,
+      t.value   = `t value`,
+      p.value   = `Pr(>|t|)`,
+      conf.low  = estimate + qt(0.025, df) * std.error,
+      conf.high = estimate + qt(0.975, df) * std.error
+    )
+  
+  #### 4) Site-specific cutoffs and predictions for visualization ####
+  site_info <- shannon_data %>%
+    dplyr::distinct(site, pair, type)
+  
+  cutoffs <- shannon_data %>%
+    dplyr::group_by(site) %>%
+    dplyr::summarise(
+      cutoff = {
+        post_dates <- Date[period == "Post"]
+        if (length(post_dates) == 0) as.Date(NA) else min(post_dates)
+      },
+      .groups = "drop"
+    )
+  
+  site_info <- dplyr::left_join(site_info, cutoffs, by = "site")
+  
+  date_seq <- seq(min(shannon_data$Date), max(shannon_data$Date), length.out = 200)
+  
+  pred_grid <- site_info %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(data = list(tibble::tibble(Date = date_seq))) %>%
+    dplyr::ungroup() %>%
+    tidyr::unnest(data) %>%
+    dplyr::mutate(
+      period   = factor(dplyr::if_else(!is.na(cutoff) & Date < cutoff, "Pre", "Post"),
+                        levels = c("Pre","Post")),
+      date_num = as.numeric(Date)
+    )
+  
+  pred_grid$fit_lmm <- predict(m_lmm, newdata = pred_grid,
+                               re.form = NULL, allow.new.levels = TRUE)
+  
+  # pair-level cutoffs; keep only pairs with a genuine Pre->Post change
+  pair_lines <- shannon_data %>%
+    group_by(pair) %>%
+    summarise(
+      has_pre  = any(period == "Pre"),
+      has_post = any(period == "Post"),
+      pair_cut = if (has_post) min(Date[period == "Post"]) else as.Date(NA),
+      .groups = "drop"
+    ) %>%
+    filter(has_pre & has_post & !is.na(pair_cut))
+  
+  p_trend <- ggplot(pred_grid, aes(Date, fit_lmm, color = type)) +
+    geom_line(aes(group = interaction(site, type)), linewidth = 0.9) +
+    # only draw where a cutoff exists (Aow Mao, No Name), none for Sattakut
+    geom_vline(data = pair_lines, aes(xintercept = pair_cut),
+               inherit.aes = FALSE, linetype = "dashed", color = "gray40") +
+    facet_wrap(~ pair, scales = "free_x") +
+    scale_color_manual(values = reef_cols) +
+    labs(title = "Shannon trends by site pair (LMM fits)",
+         x = "Date", y = "Shannon", color = "Reef Type") +
+    theme_clean +
+    geom_point(data = shannon_data, inherit.aes = FALSE,
+               aes(Date, shannon, color = type), alpha = 0.45, size = 1)
+  print(p_trend)
+  
+  #### 5) Save / show ####
+  if (!is.null(output_dir) && save_plots) {
+    dir.create(file.path(output_dir, "diversity"), recursive = TRUE, showWarnings = FALSE)
+    od <- file.path(output_dir, "diversity")
+    ggsave(file.path(od, "D1_Shannon_by_type.png"), p_type,  width = 6, height = 4,   dpi = 600)
+    ggsave(file.path(od, "D2_Shannon_by_site_within_pairs.png"), p_pair, width = 9, height = 5, dpi = 600)
+    ggsave(file.path(od, "D3_Shannon_trends_by_pair.png"), p_trend, width = 9, height = 5, dpi = 600)
+    capture.output({
+      cat("\nLMM summary\n"); print(summary(m_lmm))
+      cat("\nType II/III (car::Anova) for LMM\n"); print(car::Anova(m_lmm))
+      cat("\nDiD contrast (typeNatural:periodPost)\n"); print(did)
+    }, file = file.path(od, "diversity_model_summary.txt"))
+  }
+  if (show_plots) { print(p_type); print(p_pair); print(p_trend) }
+  
+  #### 6) Return ####
+  list(
+    data   = shannon_data %>% dplyr::select(survey_id, site, pair, type, period, Date, shannon, date_num),
+    model  = m_lmm,
+    did    = did,
+    plots  = list(type = p_type, pair = p_pair, trends = p_trend)
+  )
+}
 
-write.csv(post_summary, file.path(stats_dir, "posterior_summary_table.csv"), row.names = FALSE)
-write.csv(bayes_R2(fit_shannon_pair_spline), file.path(stats_dir, "bayes_R2_summary.csv"), row.names = FALSE)
-
-loo_results <- loo(fit_shannon_pair_spline)
-sink(file.path(stats_dir, "loo_summary.txt")); print(loo_results); sink()
-message("✅ Diversity analysis saved to: ", output_dir)
-
-s_bayes
+# Run
+div <- diversity_run(fish_long, output_dir = output_dir, show_plots = TRUE)
+div$did

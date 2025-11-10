@@ -1,0 +1,63 @@
+MODEL B: Count ~ type*fgroup + type*(date_num + period) + (1|site) [NB2]
+
+ Family: nbinom2  ( log )
+Formula:          
+Count ~ type * fgroup + type * (date_num + period) + (1 | site)
+Data: d
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  43165.3   43265.1  -21568.6   43137.3      9220 
+
+Random effects:
+
+Conditional model:
+ Groups Name        Variance Std.Dev.
+ site   (Intercept) 0.2024   0.4498  
+Number of obs: 9234, groups:  site, 6
+
+Dispersion parameter for nbinom2 family (): 0.373 
+
+Conditional model:
+                                 Estimate Std. Error z value Pr(>|z|)
+(Intercept)                     1.9701745  0.2974366    6.62 3.50e-11
+typeNatural                     1.2073802  0.4105944    2.94  0.00328
+fgroupInvertivore              -3.1925661  0.0876919  -36.41  < 2e-16
+fgroupMesopredator             -0.3006733  0.0973233   -3.09  0.00201
+fgroupHTLP                     -0.6475597  0.0910464   -7.11 1.14e-12
+date_num                       -0.0001331  0.0001140   -1.17  0.24274
+periodPost                      0.8520869  0.1471935    5.79 7.09e-09
+typeNatural:fgroupInvertivore   0.7274378  0.1120095    6.49 8.34e-11
+typeNatural:fgroupMesopredator -0.1971152  0.1240504   -1.59  0.11206
+typeNatural:fgroupHTLP         -0.3897293  0.1236944   -3.15  0.00163
+typeNatural:date_num           -0.0002449  0.0001565   -1.56  0.11772
+typeNatural:periodPost         -0.9515953  0.1899983   -5.01 5.49e-07
+                                  
+(Intercept)                    ***
+typeNatural                    ** 
+fgroupInvertivore              ***
+fgroupMesopredator             ** 
+fgroupHTLP                     ***
+date_num                          
+periodPost                     ***
+typeNatural:fgroupInvertivore  ***
+typeNatural:fgroupMesopredator    
+typeNatural:fgroupHTLP         ** 
+typeNatural:date_num              
+typeNatural:periodPost         ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Type-II Anova (car::Anova):
+Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: Count
+                  Chisq Df Pr(>Chisq)    
+type             0.3786  1  0.5383718    
+fgroup        3566.0357  3  < 2.2e-16 ***
+date_num        11.3250  1  0.0007647 ***
+period           9.1181  1  0.0025310 ** 
+type:fgroup    138.2074  3  < 2.2e-16 ***
+type:date_num    2.4474  1  0.1177192    
+type:period     25.0845  1  5.487e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

@@ -13,13 +13,13 @@ clean_data <- function(file_path) {
   raw_fish <- raw_fish[, colSums(!is.na(raw_fish)) > 0]
   raw_fish <- raw_fish[rowSums(!is.na(raw_fish)) > 0, ]
   
-  # ---- Fix column names ----
-  raw_fish <- raw_fish %>%
+  # ---- Fix column names ---- # dont need this anymore 
+  'raw_fish <- raw_fish %>%
     rename(
       sml_Grouper = Grouper.30,
       lrg_Grouper = Grouper.30.1,
       lrg_Snapper = Snapper.30
-    )
+    )'
   
   # ---- Identify species columns ----
   species_cols <- c("Parrotfish","Rabbitfish","Butterflyfish","Angelfish","Cleaner_Wrasse",
@@ -59,7 +59,7 @@ clean_data <- function(file_path) {
   
   # ---- Remove unwanted columns ----
   fish_long <- fish_long %>%
-    select(-Time, -Duration, -Depth, -Visibility, -Weather, -Current, -Boats, -total_N) %>%
+    dplyr::select(-Time, -Duration, -Depth, -Visibility, -Weather, -Current, -Boats, -total_N) %>%
     filter(Researcher != "Keisha")
   
   # ---- Fix site naming ----
@@ -72,8 +72,9 @@ clean_data <- function(file_path) {
       Site %in% c("No Name Pinnacle","No Name Wreck") ~ "No Name",
       Site %in% c("Hin Pee Wee","Sattakut") ~ "Sattakut"
     )) %>%
-    filter(!is.na(pair)) %>%
-    mutate(Type = recode(Type, "Artifical" = "Artificial"))
+    filter(!is.na(pair)) 
+  # %>%
+    # mutate(Type = recode(Type, "Artifical" = "Artificial"))
   
   # ---- Check structure ----
   message("✅ Site–pair structure:")
@@ -101,24 +102,30 @@ clean_data <- function(file_path) {
              if_else(Date < deployment_date, 0,
                      interval(deployment_date, Date) / months(1)))
   
-  # ---- Apply standardized naming (for 00.SET.R) ----
+  # ---- Apply standardized naming  ----
   fish_long <- fish_long %>%
     mutate(
       period   = factor(deployment_period, levels = c("Pre","Post")),
       type     = factor(Type, levels = c("Artificial","Natural")),
-      t_since  = pmax(0, months_since_deployment),
+      t_since  = pmax(0, months_since_deployment), # t in months 
       pair     = factor(pair),
       site     = factor(Site),
+      Species  = factor(Species),
+      survey_id= factor(survey_id),
       fgroup   = factor(Functional_Group,
                         levels = c("Grazer","Invertivore","Mesopredator","HTLP")),
       date_num = as.numeric(Date - min(Date))
     )
-  
+  # ---- Some date formatting ----
+  fish_long <- fish_long %>%
+    mutate(Date = ymd(Date)) 
+  fish_long$date_s <- scale(fish_long$date_num)
   # ---- Final selection and ordering ----
   fish_long <- fish_long %>%
-    select(site, pair, type, period, t_since, date_num,
-           Researcher, survey_id, Species, fgroup, Count, Date)
-  
+    dplyr::select(site, pair, type, period, t_since, date_num,
+           Researcher, survey_id, Species, fgroup, Count, Date, date_s)
+  # remove ZI species after exploration 
+  fish_long <- fish_long %>% filter(Species != "Eel", Species!= "Ray")
   # ---- Save cleaned file ----
   saveRDS(fish_long, "fish_long_cleaned.rds")
   message("✅ Saved 'fish_long_cleaned.rds' with standardized names and cleaned structure.")
@@ -127,3 +134,6 @@ clean_data <- function(file_path) {
 
 # ---- Run cleaning ----
 fish_long <- clean_data(file_path)
+
+# check structure 
+str(fish_long)

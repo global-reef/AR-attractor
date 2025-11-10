@@ -1,0 +1,24 @@
+ Family: nbinom2  ( log )
+Formula:          Total_Count ~ type * date_num + (1 | site)
+Data: df
+
+      AIC       BIC    logLik -2*log(L)  df.resid 
+    609.1     621.2    -298.5     597.1        50 
+
+Random effects:
+
+Conditional model:
+ Groups Name        Variance  Std.Dev. 
+ site   (Intercept) 5.189e-10 2.278e-05
+Number of obs: 56, groups:  site, 2
+
+Dispersion parameter for nbinom2 family (): 2.67 
+
+Conditional model:
+                       Estimate Std. Error z value Pr(>|z|)    
+(Intercept)           3.5070802  0.3037390  11.546  < 2e-16 ***
+typeNatural           1.5871890  0.4392976   3.613 0.000303 ***
+date_num              0.0012379  0.0003896   3.177 0.001488 ** 
+typeNatural:date_num -0.0018467  0.0005628  -3.281 0.001033 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

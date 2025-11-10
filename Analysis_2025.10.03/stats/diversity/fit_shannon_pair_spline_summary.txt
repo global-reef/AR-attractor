@@ -1,0 +1,77 @@
+ Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: shannon ~ s(date_num, by = interaction(pair, Type), k = 6) + Type * deployment_period + (1 | Site) 
+   Data: shannon_data (Number of observations: 268) 
+  Draws: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+         total post-warmup draws = 8000
+
+Smoothing Spline Hyperparameters:
+                                                       Estimate Est.Error
+sds(sdate_numinteractionpairTypeAowMao.Artificial_1)       1.07      0.48
+sds(sdate_numinteractionpairTypeNoName.Artificial_1)       0.40      0.30
+sds(sdate_numinteractionpairTypeSattakut.Artificial_1)     0.38      0.42
+sds(sdate_numinteractionpairTypeAowMao.Natural_1)          0.24      0.20
+sds(sdate_numinteractionpairTypeNoName.Natural_1)          0.21      0.18
+sds(sdate_numinteractionpairTypeSattakut.Natural_1)        0.37      0.34
+                                                       l-95% CI u-95% CI Rhat
+sds(sdate_numinteractionpairTypeAowMao.Artificial_1)       0.47     2.27 1.00
+sds(sdate_numinteractionpairTypeNoName.Artificial_1)       0.02     1.14 1.00
+sds(sdate_numinteractionpairTypeSattakut.Artificial_1)     0.01     1.59 1.00
+sds(sdate_numinteractionpairTypeAowMao.Natural_1)          0.01     0.74 1.00
+sds(sdate_numinteractionpairTypeNoName.Natural_1)          0.01     0.67 1.00
+sds(sdate_numinteractionpairTypeSattakut.Natural_1)        0.01     1.27 1.00
+                                                       Bulk_ESS Tail_ESS
+sds(sdate_numinteractionpairTypeAowMao.Artificial_1)       4974     5626
+sds(sdate_numinteractionpairTypeNoName.Artificial_1)       3543     2920
+sds(sdate_numinteractionpairTypeSattakut.Artificial_1)     3118     4072
+sds(sdate_numinteractionpairTypeAowMao.Natural_1)          5009     4176
+sds(sdate_numinteractionpairTypeNoName.Natural_1)          4908     4220
+sds(sdate_numinteractionpairTypeSattakut.Natural_1)        3051     4221
+
+Multilevel Hyperparameters:
+~Site (Number of levels: 6) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.17      0.08     0.07     0.36 1.00     3446     5119
+
+Regression Coefficients:
+                                                   Estimate Est.Error l-95% CI
+Intercept                                              1.49      0.16     1.19
+TypeNatural                                            0.41      0.18     0.04
+deployment_periodPost                                  0.16      0.14    -0.10
+TypeNatural:deployment_periodPost                     -0.19      0.16    -0.50
+sdate_num:interactionpairTypeAowMao.Artificial_1       0.23      0.48    -0.72
+sdate_num:interactionpairTypeNoName.Artificial_1       0.49      0.45    -0.46
+sdate_num:interactionpairTypeSattakut.Artificial_1    -0.13      0.37    -0.93
+sdate_num:interactionpairTypeAowMao.Natural_1          0.31      0.37    -0.51
+sdate_num:interactionpairTypeNoName.Natural_1          0.14      0.33    -0.55
+sdate_num:interactionpairTypeSattakut.Natural_1       -0.17      0.36    -0.83
+                                                   u-95% CI Rhat Bulk_ESS
+Intercept                                              1.80 1.00     4958
+TypeNatural                                            0.76 1.00     4903
+deployment_periodPost                                  0.42 1.00     5763
+TypeNatural:deployment_periodPost                      0.13 1.00     5344
+sdate_num:interactionpairTypeAowMao.Artificial_1       1.16 1.00    11804
+sdate_num:interactionpairTypeNoName.Artificial_1       1.28 1.00     5483
+sdate_num:interactionpairTypeSattakut.Artificial_1     0.56 1.00     6661
+sdate_num:interactionpairTypeAowMao.Natural_1          0.95 1.00     6508
+sdate_num:interactionpairTypeNoName.Natural_1          0.78 1.00     7819
+sdate_num:interactionpairTypeSattakut.Natural_1        0.60 1.00     7594
+                                                   Tail_ESS
+Intercept                                              5771
+TypeNatural                                            5624
+deployment_periodPost                                  6131
+TypeNatural:deployment_periodPost                      5808
+sdate_num:interactionpairTypeAowMao.Artificial_1       6023
+sdate_num:interactionpairTypeNoName.Artificial_1       6097
+sdate_num:interactionpairTypeSattakut.Artificial_1     5236
+sdate_num:interactionpairTypeAowMao.Natural_1          6258
+sdate_num:interactionpairTypeNoName.Natural_1          5307
+sdate_num:interactionpairTypeSattakut.Natural_1        6201
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     0.25      0.01     0.23     0.27 1.00     9844     5854
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
