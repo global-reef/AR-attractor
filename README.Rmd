@@ -1,0 +1,91 @@
+# AR-Attractor  
+
+Using shipwreck fish assemblage data to test whether newly deployed artificial reefs act as **attractors** of fish from nearby natural reefs in the Gulf of Thailand.  
+This repository covers only the *attractor* half of the broader **Attractor vs Producer** project by [Global Reef](https://global-reef.com).
+
+---
+
+## 🐠 Overview  
+Artificial reefs are increasingly deployed to enhance fish abundance and biodiversity, yet whether they function primarily as **attractors** (concentrating existing fish from nearby reefs) or **producers** (creating new biomass) remains debated.  
+This repository contains R scripts and data used to analyse attraction effects around new wreck deployments near Koh Tao, Thailand.
+
+The complementary “producer” half of this project is hosted separately in [`AR-producer`](https://github.com/global-reef/AR-producer) and focuses on long-term productivity and recruitment processes.
+
+---
+
+## 🎯 Objectives  
+- Quantify fish assemblage structure and abundance on newly deployed wrecks vs nearby natural reefs.  
+- Test whether observed assemblages indicate attraction of existing reef fish.  
+- Explore responses by **functional group** (e.g., grazers, invertivores, mesopredators, higher-trophic predators).  
+- Provide management-relevant guidance for future AR deployments under Thailand’s DMCR program.
+
+---
+
+## 📁 Repository structure  
+```
+DATA/                   # cleaned and raw data (fish counts, site metadata)
+00.RUN.R                # master script to reproduce full analysis
+01.CLEAN.R              # data cleaning and preprocessing
+02.EXPLORE.R            # exploratory summaries and visualizations
+03.DIVERSITY.R          # diversity and assemblage metrics
+04.FUNGROUPS.R          # functional group models
+05.PAIRED.R             # paired comparisons: wreck vs reef
+06.NMDS_BRAYCURT.R      # multivariate ordination (NMDS)
+scratch.R               # testing / notes
+AR_Attractor.Rproj      # R project file
+```
+
+Outputs (figures, tables, RDS objects) are generated within each script and can be directed to an `outputs/` folder.
+
+---
+
+## ⚙️ Getting started  
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/global-reef/AR-attractor.git
+   ```
+2. Open `AR_Attractor.Rproj` in RStudio.  
+3. Run `01.CLEAN.R` to assemble cleaned data.  
+4. Execute subsequent scripts (`02.*` → `06.*`) in order.  
+5. All figures and summary tables will be created automatically.
+
+---
+
+## 📦 Dependencies  
+Required R packages:
+- **tidyverse** (dplyr, ggplot2, tidyr)
+- **vegan** (for NMDS and Bray-Curtis dissimilarities)
+- **emmeans**, **glmmTMB**, **broom.mixed**, **performance** (for model evaluation)
+
+Each script lists additional dependencies at the top.
+
+---
+
+## 📊 Outputs  
+- Fish abundance summaries by site, date, and functional group  
+- Diversity and NMDS ordination plots  
+- Paired comparisons between wreck and reef sites  
+- Figures for reporting to DMCR and Global Reef internal analyses  
+
+---
+
+## 🔍 Relation to “Producer” work  
+This repository isolates the *attractor* question:  
+> Do new wrecks pull fish from existing reef systems, altering local assemblage balance?  
+
+The **producer** repository will assess whether wrecks generate *new* fish biomass through recruitment and growth.
+
+## Notes
+-----
+
+- Survey data are collected by Global Reef researchers based in Koh Tao, Thailand.
+- Fieldwork and data processing are ongoing; results may be updated as more surveys are completed.
+- This project contributes to understanding the ecological role of mid-shelf reef features in regional conservation planning.
+
+## License
+-------
+
+This project is private and not licensed for redistribution. For collaboration inquiries, please contact scarlett@global-reef.com.
+---
+
+**Affiliation:** [Global Reef](https://global-reef.com), Koh Tao, Thailand  
